@@ -1,1 +1,160 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using System.Data.Sql;
+using System.Data.SqlClient;
+namespace CRUD_COMPLETE
+{
+    public partial class Form1 : Form
+    {
+        int rc , rp=1, id = 0;
+       
+        public Form1()
+        {
+            InitializeComponent();
+        }
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Display();
+        }
 
+        private void btnins_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                string sql = "insert into stud_info values('" + textBox1.Text + "','" + textBox2.Text + "','" + textBox3.Text + "','" + textBox4.Text + "')";
+                SqlDataAdapter da = new SqlDataAdapter(sql, Info.stud);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                MessageBox.Show("Your Data Inserted !!");
+                Display();
+                clear();
+            }
+            else
+            {
+                MessageBox.Show("No Data Found!!");   
+            }
+
+        }
+
+        private void btndel_Click(object sender, EventArgs e)
+        {
+            if (textBox1.Text != "")
+            {
+                string sql = "delete from stud_info where Roll_No='" + textBox1.Text + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, Info.stud);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                MessageBox.Show("Your Data Deleted !!");
+                Display();
+                clear();
+            }
+            else
+            {
+                MessageBox.Show("No Data Found!!");
+            }
+        }
+
+        private void btnclear_Click(object sender, EventArgs e)
+        {
+            clear();
+        }
+
+        public void Display()
+        {
+           string Sql ="select * from stud_info";
+            SqlDataAdapter da = new SqlDataAdapter(Sql ,Info.stud);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            dataGridView1.DataSource = dt;
+        }
+
+        public void clear()
+        {
+            textBox1.Text = "";
+            textBox2.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            textBox1.Focus();
+        }
+
+        public void Navigate()
+        {
+            string sql = "select *from stud_info";
+            SqlDataAdapter da = new SqlDataAdapter(sql, Info.stud);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            id = Convert.ToInt32(dt.Rows[rp][0]);     
+            textBox1.Text = dt.Rows[rp][0].ToString();
+            textBox2.Text = dt.Rows[rp][1].ToString();
+            textBox3.Text = dt.Rows[rp][2].ToString();
+            textBox4.Text = dt.Rows[rp][3].ToString();
+        }
+
+        private void btnfirst_Click(object sender, EventArgs e)
+        {
+          
+            rp = 0;
+            Navigate();
+           
+         
+        }
+
+        private void btnupdate_Click(object sender, EventArgs e)
+        {
+            string sql ="update stud_info set Name ='" + textBox2.Text + "', Surename ='" + textBox3.Text + "', Mobile_No ='" + textBox4.Text + "' where Roll_No='" + textBox1.Text + "'";
+            SqlDataAdapter da = new SqlDataAdapter(sql , Info.stud);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            MessageBox.Show("Data Updated Successfully.");
+            Display();
+            clear();
+        }
+
+        private void btnnext_Click(object sender, EventArgs e)
+        {
+            if (rp < rc -1)
+            {
+                rp += 1;
+                Navigate();
+            }
+            else
+            {
+                MessageBox.Show("No Data Found!!"); 
+            }
+        }
+
+        private void btnprev_Click(object sender, EventArgs e)
+        {
+            if (rp > 0)
+            {
+                rp -= 1;
+                Navigate();
+            }
+            else
+            {
+                MessageBox.Show("No Data Found!!");
+            }
+        }
+
+        private void btnlast_Click(object sender, EventArgs e)
+        {
+            
+                string sql = "select *from stud_info";
+                SqlDataAdapter da = new SqlDataAdapter(sql, Info.stud);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                textBox1.Text = dt.Rows[dt.Rows.Count - 1][0].ToString();
+                textBox2.Text = dt.Rows[dt.Rows.Count - 1][1].ToString();
+                textBox3.Text = dt.Rows[dt.Rows.Count - 1][2].ToString();
+                textBox4.Text = dt.Rows[dt.Rows.Count - 1][3].ToString();
+        
+          
+        }
+    }
+}
