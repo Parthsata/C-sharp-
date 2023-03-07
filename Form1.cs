@@ -9,12 +9,11 @@ using System.Windows.Forms;
 using System.Data.Sql;
 using System.Data.SqlClient;
 
-namespace CRUD_WITH_CLASS
+
+namespace Employe
 {
     public partial class Form1 : Form
     {
-        int rc = 0, rp = -1;
-        int rollno = 0;
         public Form1()
         {
             InitializeComponent();
@@ -25,33 +24,60 @@ namespace CRUD_WITH_CLASS
             Display();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btninsert_Click(object sender, EventArgs e)
         {
-            string qtype = "insert";
-            string tblnm = "Stud";
-            string values = textBox1.Text + "','" + textBox2.Text; 
-            Class1.Crud(qtype, tblnm, values);
-
+            string sql = "insert into Employe values('" + textBox1.Text + "','" + textBox2.Text + "','" + textBox3.Text + "','" + textBox4.Text + "','" + textBox5.Text + "','" + textBox6.Text + "','" + dateTimePicker1.Value.ToString() + "','" + textBox7.Text + "')";
+            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.Emp);
+            DataTable dt = new DataTable();
+            da.Fill(dt);
+            MessageBox.Show("Your Data Inserted !!");
+            Display();
+            clear();
         }
+
         public void Display()
         {
-            string Sql = "select * from Stud";
-            SqlDataAdapter da = new SqlDataAdapter(Sql, Class1.pp);
+            string Sql = "select * from Employe";
+            SqlDataAdapter da = new SqlDataAdapter(Sql, Class1.Emp);
             DataTable dt = new DataTable();
             da.Fill(dt);
             dataGridView1.DataSource = dt;
         }
+
         public void clear()
         {
             textBox1.Text = "";
             textBox2.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            textBox5.Text = "";
+            textBox6.Text = "";
+            textBox7.Text = "";
             textBox1.Focus();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void btndel_Click(object sender, EventArgs e)
         {
-            string sql = "update Stud set Name ='" + textBox2.Text + "' where Roll_No='" + textBox1.Text + "'";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.pp);
+            if (textBox1.Text != "")
+            {
+                string sql = "delete from Employe where Emp_id='" + textBox1.Text + "'";
+                SqlDataAdapter da = new SqlDataAdapter(sql, Class1.Emp);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                MessageBox.Show("Your Data Deleted !!");
+                Display();
+                clear();
+            }
+            else
+            {
+                MessageBox.Show("No Data Found!!");
+            }
+        }
+
+        private void btnupdate_Click(object sender, EventArgs e)
+        {
+            string sql ="update Employe set Emp_FName ='" + textBox2.Text + "', Emp_MName ='" + textBox3.Text + "', Emp_LName ='" + textBox4.Text + "', Email ='" + textBox5.Text + "', Contact_No ='" + textBox6.Text + "', Joining_date ='" + dateTimePicker1.Text + "', Salary ='" + textBox7.Text + "' where Emp_id='" + textBox1.Text + "'";
+            SqlDataAdapter da = new SqlDataAdapter(sql , Class1.Emp);
             DataTable dt = new DataTable();
             da.Fill(dt);
             MessageBox.Show("Data Updated Successfully.");
@@ -59,74 +85,9 @@ namespace CRUD_WITH_CLASS
             clear();
         }
 
-        private void button4_Click(object sender, EventArgs e)
+        private void btnclear_Click(object sender, EventArgs e)
         {
-            string qtype = "Delete";
-            string tblnm = "Stud";
-            string values = textBox2.Text + "','" + textBox1.Text;
-            Class1.Crud(qtype, tblnm, values);
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            rp = 0;
-            Navigate();
-
-        }
-        public void Navigate()
-        {
-            try
-            {
-                string sql = "select *from Stud";
-                SqlDataAdapter da = new SqlDataAdapter(sql, Class1.pp);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                rollno = dt.Rows.Count - 1;
-                textBox1.Text = dt.Rows[rp][0].ToString();
-                textBox2.Text = dt.Rows[rp][1].ToString();
-            }
-            catch (Exception ex)
-            {
-
-                MessageBox.Show("No Data Found!!");
-            }
-        }
-
-        private void button8_Click(object sender, EventArgs e)
-        {
-
-            string sql = "select *from Stud";
-            SqlDataAdapter da = new SqlDataAdapter(sql, Class1.pp);
-            DataTable dt = new DataTable();
-            da.Fill(dt);
-            textBox1.Text = dt.Rows[dt.Rows.Count - 1][0].ToString();
-            textBox2.Text = dt.Rows[dt.Rows.Count - 1][1].ToString();
-        }
-
-        private void button6_Click(object sender, EventArgs e)
-        {
-            if (rp != rollno)
-            {
-                rp = rp + 1;
-                Navigate();
-            }
-            else
-            {
-                MessageBox.Show("No Data Found!!");
-            }
-        }
-
-        private void button7_Click(object sender, EventArgs e)
-        {
-            if (rp > 0)
-            {
-                rp -= 1;
-                Navigate();
-            }
-            else
-            {
-                MessageBox.Show("No Data Found!!");
-            }
+            clear();
         }
 
     }
